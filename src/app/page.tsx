@@ -1,63 +1,78 @@
 import Image from "next/image";
+import Post from "../component/post";
+import Nav from "../component/navbar";
+import { Search, Bell, User, Settings, Home as HomeIcon } from "lucide-react";
 
 export default function Home() {
+  const posts = [
+    {
+      user: { name: "John Doe", avatar: "/defaultDp.png" },
+      time: "2h ago",
+      content: "Just started building my new Next.js social media app! 🚀🔥 This dark theme setup with Tailwind CSS is looking sharp and modern.",
+      image: "/defaultPost.jpg",
+    },
+    {
+      user: { name: "Sara Smith", avatar: "/defaultDp.png" },
+      time: "5h ago",
+      content: "Dark theme is love. Working late night hits different ✨ Finding the perfect balance between 'too bright' and 'too dull' is key for a great user experience.",
+    },
+    {
+      user: { name: "DevHub", avatar: "/defaultDp.png" },
+      time: "1 day ago",
+      content: "Here's a clean UI for feed pages using Tailwind + Next.js! Check out the subtle hover effects and component reuse for maximum performance.",
+      image: "/defaultPost.jpg",
+    },
+  ];
+  
+  
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-black text-white">
+      <Nav />
+      
+      <main className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
+        <div className="hidden md:block md:w-1/4 sticky top-24 h-fit p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+          <h3 className="font-semibold text-lg mb-4 text-indigo-400">Navigation</h3>
+          <ul className="space-y-3 text-zinc-300">
+            <li className="flex items-center gap-2 p-2 rounded-lg bg-indigo-900/30 text-indigo-400 font-medium cursor-pointer">
+                <HomeIcon className="w-5 h-5" /> Feed
+            </li>
+            <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-zinc-800 cursor-pointer">
+                <Settings className="w-5 h-5" /> Settings
+            </li>
+            <li className="flex items-center gap-2 p-2 rounded-lg hover:bg-zinc-800 cursor-pointer">
+                <User className="w-5 h-5" /> Profile
+            </li>
+          </ul>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+        
+      
+        <div className="w-full md:w-3/4 flex flex-col gap-6">
+          <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-700 shadow-md">
+            <textarea
+              placeholder="What's on your mind, John?"
+              className="w-full bg-transparent text-white p-2 border-b border-zinc-700 focus:outline-none resize-none"
+              rows={2}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="flex justify-between items-center pt-3">
+              <span className="text-sm text-indigo-400 cursor-pointer hover:text-indigo-300">Add Image/Video</span>
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-150">
+                Post
+              </button>
+            </div>
+          </div>
+
+
+          {
+            posts.map((post, index) => (
+              <Post
+                key={index}
+                user={post.user}
+                time={post.time}
+                content={post.content}
+                image={post.image} 
+              />
+            ))
+          }
         </div>
       </main>
     </div>
