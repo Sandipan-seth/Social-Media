@@ -2,18 +2,25 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  useEffect(() => {
+      setToken(localStorage.getItem("token") || "");
+      if (token) {
+        route.push("/");
+      }
+    }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Email:", email);
     try {
       const response = await axios.post("/api/login", {
         email,
@@ -21,9 +28,11 @@ export default function LoginPage() {
       });
       console.log("Response:", response.data);
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Login successful!");
         route.push("/");
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error during login:", error);

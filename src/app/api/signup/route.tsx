@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     : "../../../assets/femaleDefault.png";
 
   const newUser = new User({
-    username: username.slice(1).split(" ").join("_"),
+    username: username.split(" ").join("_"),
     profilePicture: pp,
     fullname,
     email,
@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
     success: true,
     user: newUser,
     message: "User registered successfully",
+    token
   });
 
   res.cookies.set("token", token, {

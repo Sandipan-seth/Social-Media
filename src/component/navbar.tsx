@@ -1,25 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Search, Bell, User, Settings, Home as HomeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-
 export default function Nav() {
+  const [search, setSearch] = useState("");
+  const [token, setToken] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const [search, setSearch] = useState("");
-    const router = useRouter();
-    const searchFunction = (e:any) => {
-       if (e.key === "Enter" && search.trim()) {
-      router.push(`/search/${encodeURIComponent(search)}`);
-
+  useEffect(() => {
+    setToken(localStorage.getItem("token") || "");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-      if (e.key === "Escape") {
-        setSearch("");
-      }
+  }, [token]);
 
-    };
+  const router = useRouter();
+  const searchFunction = (e: any) => {
+    if (e.key === "Enter" && search.trim()) {
+      router.push(`/search/${encodeURIComponent(search)}`);
+    }
+    if (e.key === "Escape") {
+      setSearch("");
+    }
+  };
 
   const defaultAvatar =
     "https://www.shareicon.net/data/512x512/2016/05/24/770117_people_512x512.png";
@@ -51,13 +59,37 @@ export default function Nav() {
           </button>
 
           <div className="relative">
-            <img
-              src={defaultAvatar}
-              alt="User Avatar"
-              className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500 cursor-pointer hover:opacity-90 transition"
-            />
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900"></span>
+            {isLoggedIn ? (
+              <>
+                <img
+                  src={defaultAvatar}
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500 cursor-pointer hover:opacity-90 transition"
+                />
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900"></span>
+              </>
+            ) : (
+              <button
+                onClick={() => router.push("/login")}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-full text-white text-sm font-semibold transition"
+              >
+                <User className="w-5 h-5" />
+                Login
+              </button>
+            )}
           </div>
+
+
+          {/* temporary logout button for testing */}
+          <button
+            onClick={
+              () => {
+                localStorage.removeItem("token");
+                setIsLoggedIn(false);
+                window.location.reload();
+              }
+            }
+          >logout</button>
         </div>
       </div>
     </nav>

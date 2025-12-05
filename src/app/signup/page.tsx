@@ -2,22 +2,28 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-
 export default function SignupPage() {
-    const router = useRouter();
+  const router = useRouter();
+  const [token, setToken] = useState("");
+  
+  useEffect(() => {
+    setToken(localStorage.getItem("token") || "");
+    if (token) {
+      router.push("/");
+    }
+  }, [token]);
 
   const [formData, setFormData] = useState({
-    username: "@",
+    username: "",
     fullname: "",
     email: "",
     gender: "",
     password: "",
   });
-
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -31,28 +37,28 @@ export default function SignupPage() {
   async function handleSubmit(e: any) {
     e.preventDefault();
 
-    try{
-        const response = await axios.post('/api/signup', formData);
-        console.log(response.data);
-        if(response.data.success){
-            router.push('/');
-            toast.success("User registered successfully");
-        }
-        else{
-            alert(response.data.message);
-            toast.error(response.data.message);
-        }
+    try {
+      const response = await axios.post("/api/signup", formData);
+      console.log(response.data);
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        router.push("/");
 
-    }catch(err: any){
-        console.log(err);
-    }finally{
-        setFormData({
-            username: "@",
-            fullname: "",
-            email: "",  
-            gender: "",
-            password: "",
-        });
+        toast.success("User registered successfully");
+      } else {
+        alert(response.data.message);
+        toast.error(response.data.message);
+      }
+    } catch (err: any) {
+      console.log(err);
+    } finally {
+      setFormData({
+        username: "",
+        fullname: "",
+        email: "",
+        gender: "",
+        password: "",
+      });
     }
   }
 
@@ -66,7 +72,7 @@ export default function SignupPage() {
               htmlFor="username"
               className="block text-sm font-medium mb-1"
             >
-              Username 
+              Username
               <span className="text-gray-400 my-0.5 ml-1 text-xs font-normal">
                 (must be unique for each user)
               </span>
