@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     picture : { type: String },
-
+    isOnlyFriends: { type: Boolean, default: false }
 });
 
 export const Post = mongoose.models.Post || mongoose.model("Post", postSchema);

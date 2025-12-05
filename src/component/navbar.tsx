@@ -3,12 +3,14 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Search, Bell, User, Settings, Home as HomeIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Nav() {
   const [search, setSearch] = useState("");
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const path = usePathname();
 
   useEffect(() => {
     setToken(localStorage.getItem("token") || "");
@@ -80,13 +82,16 @@ export default function Nav() {
           </div>
 
 
-          {/* temporary logout button for testing */}
           <button
             onClick={
               () => {
                 localStorage.removeItem("token");
                 setIsLoggedIn(false);
                 window.location.reload();
+                if (path !== "/"){
+                  router.push("/");
+                }
+                toast.success("Logged out successfully");
               }
             }
           >logout</button>
