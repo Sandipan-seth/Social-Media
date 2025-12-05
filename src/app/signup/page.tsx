@@ -11,7 +11,7 @@ export default function SignupPage() {
     const router = useRouter();
 
   const [formData, setFormData] = useState({
-    username: "",
+    username: "@",
     fullname: "",
     email: "",
     gender: "",
@@ -36,14 +36,18 @@ export default function SignupPage() {
         console.log(response.data);
         if(response.data.success){
             router.push('/');
+            toast.success("User registered successfully");
         }
-        toast.success("User registered successfully");
+        else{
+            alert(response.data.message);
+            toast.error(response.data.message);
+        }
 
     }catch(err: any){
         console.log(err);
     }finally{
         setFormData({
-            username: "",
+            username: "@",
             fullname: "",
             email: "",  
             gender: "",

@@ -19,6 +19,14 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  const usernameExists = await User.findOne({ username: username.slice(1).split(" ").join("_") });
+  if (usernameExists) {
+    return NextResponse.json({
+      success: false,
+      message: "Username already taken",
+    });
+  }
+
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   const pp = gender === "male"
@@ -26,7 +34,7 @@ export async function POST(req: NextRequest) {
     : "../../../assets/femaleDefault.png";
 
   const newUser = new User({
-    username,
+    username: username.slice(1).split(" ").join("_"),
     profilePicture: pp,
     fullname,
     email,
@@ -43,7 +51,7 @@ export async function POST(req: NextRequest) {
       fullname: newUser.fullname,
       gender: newUser.gender,
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET as string,
     {
       expiresIn: "1d",
     }
