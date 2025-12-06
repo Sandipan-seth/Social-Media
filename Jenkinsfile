@@ -42,12 +42,12 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                bat '''
-                docker stop social-media || true
-                docker rm social-media || true
-                docker run -d --name social-media --env-file .env -p 3000:3000 %DOCKERHUB_REPO%:%IMAGE_TAG%
-                '''
-            }
+                withCredentials([file(credentialsId: 'envfile', variable: 'ENVFILE')]) {
+                    bat """
+                    docker stop social-media 2>nul
+                    docker rm social-media 2>nul
+                    docker run -d --env-file %ENVFILE% -p 3000:3000 --name social-media sandipanseth/social-media:%IMAGE_TAG%
+                """
         }
     }
 }
