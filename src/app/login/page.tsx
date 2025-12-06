@@ -28,6 +28,7 @@ export default function LoginPage() {
       });
       console.log("Response:", response.data);
       if (response.data.success) {
+        localStorage.setItem("username", response.data.username);
         localStorage.setItem("token", response.data.token);
         toast.success("Login successful!");
         route.push("/");

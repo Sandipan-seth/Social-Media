@@ -61,6 +61,7 @@ export async function POST(req: NextRequest) {
     success: true,
     user: newUser,
     message: "User registered successfully",
+    username: newUser.username,
     token
   });
 

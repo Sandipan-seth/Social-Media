@@ -8,8 +8,10 @@ export default function SideNav() {
   const path = usePathname();
   const router = useRouter();
   const [token, setToken] = React.useState("");
+  const [username, setUsername] = React.useState("");
   React.useEffect(() => {
     setToken(localStorage.getItem("token") || "");
+    setUsername(localStorage.getItem("username") || "");
   }, [token]);
 
   return (
@@ -49,7 +51,7 @@ export default function SideNav() {
               : "hover:bg-zinc-800"
           }`}
           onClick={() =>
-            token ? router.push("/profile/Sandipan") : router.push("/login")
+            token ? router.push(`/profile/${username}`) : router.push("/login")
           }
         >
           <User className="w-5 h-5" /> Profile

@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export default function SignupPage() {
   const router = useRouter();
   const [token, setToken] = useState("");
-  
+
   useEffect(() => {
     setToken(localStorage.getItem("token") || "");
     if (token) {
@@ -41,6 +41,7 @@ export default function SignupPage() {
       const response = await axios.post("/api/signup", formData);
       console.log(response.data);
       if (response.data.success) {
+        localStorage.setItem("username", response.data.username);
         localStorage.setItem("token", response.data.token);
         router.push("/");
 

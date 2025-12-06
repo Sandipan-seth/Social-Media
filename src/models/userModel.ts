@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     friends : [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    bio : { type: String }
+    bio : { type: String },
+    isVerified: { type: Boolean, default: false },
 });
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);
