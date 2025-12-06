@@ -22,21 +22,21 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %DOCKERHUB_REPO%:%IMAGE_TAG% ."
+                bat """docker build -t %DOCKERHUB_REPO%:%IMAGE_TAG% ."""
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    bat "echo %PASS% | docker login -u %USER% --password-stdin"
+                    bat """echo %PASS% | docker login -u %USER% --password-stdin"""
                 }
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                bat "docker push %DOCKERHUB_REPO%:%IMAGE_TAG%"
+                bat """docker push %DOCKERHUB_REPO%:%IMAGE_TAG%"""
             }
         }
 
@@ -46,8 +46,10 @@ pipeline {
                     bat """
                     docker stop social-media 2>nul
                     docker rm social-media 2>nul
-                    docker run -d --env-file %ENVFILE% -p 3000:3000 --name social-media sandipanseth/social-media:%IMAGE_TAG%
-                """
+                    docker run -d --name social-media --env-file %ENVFILE% -p 3000:3000 %DOCKERHUB_REPO%:%IMAGE_TAG%
+                    """
+                }
+            }
         }
     }
 }
