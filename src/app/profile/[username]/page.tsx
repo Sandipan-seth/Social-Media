@@ -36,9 +36,7 @@ export default function ProfilePage() {
         });
 
         if (response.data.success) {
-          const userData = response.data.user;
-
-          setUser(userData);
+          setUser(response.data.user);
         } else {
           router.push("/404");
           toast.error("User not found");
@@ -54,25 +52,32 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-zinc-400">Loading profile...</p>
+      <div className="flex items-center justify-center h-screen bg-black text-zinc-400">
+        Loading profile...
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Same layout as Home page */}
       <main className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
-        <SideNav />
 
-        <div className="w-full md:w-3/4 flex flex-col gap-2">
+        {/* SIDE NAV */}
+        <div className="w-full md:w-1/4">
+          <SideNav />
+        </div>
 
+        {/* MAIN CONTENT */}
+        <div className="w-full md:w-3/4 flex flex-col gap-6">
 
+          {/* PROFILE HEADER */}
           <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
-            <div className="flex items-center gap-6">
-              <div className="relative w-28 h-28 rounded-full overflow-hidden border border-zinc-700">
-                <Image
-                  // src={user.profilePicture}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+
+              {/* PROFILE IMAGE */}
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-zinc-700 flex-shrink-0">
+                <Image 
                   src={maleDp}
                   alt="Profile"
                   fill
@@ -80,50 +85,51 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div>
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              {/* NAME & DETAILS */}
+              <div className="text-center sm:text-left w-full">
+                <h1 className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2">
                   {user.fullname}
-                  <button className="p-2 rounded-lg hover:bg-zinc-800">
+                  <button className="p-2 rounded-lg hover:bg-zinc-800 transition">
                     <PencilLine className="w-5 h-5 text-zinc-400" />
                   </button>
                 </h1>
 
                 <p className="text-zinc-400">@{user.username}</p>
 
-                <div className="flex items-center gap-4 mt-2 text-zinc-300">
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 mt-3 text-zinc-300">
                   <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" /> {user.email}
+                    <Mail className="w-4 h-4" />
+                    {user.email}
                   </div>
+
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4" /> {user.gender}
+                    <User className="w-4 h-4" />
+                    {user.gender}
                   </div>
                 </div>
+
+                <p className="mt-4 text-zinc-300 text-center sm:text-left">
+                  {user.bio || "No bio added yet."}
+                </p>
               </div>
             </div>
-
-            <p className="mt-4 text-zinc-300">
-              {user.bio || "No bio added yet."}
-            </p>
           </div>
 
           {/* STATS */}
-          <div className="flex justify-between bg-zinc-900 p-6 rounded-2xl border border-zinc-800 mt-6 text-center">
+          <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800 flex justify-around sm:justify-between text-center">
             <div>
-              <p className="text-2xl font-bold text-white">
-                {user.posts?.length || 0}
-              </p>
+              <p className="text-2xl font-bold">{user.posts?.length || 0}</p>
               <p className="text-zinc-400 text-sm">Posts</p>
             </div>
+
             <div>
-              <p className="text-2xl font-bold text-white">
-                {user.friends?.length || 0}
-              </p>
+              <p className="text-2xl font-bold">{user.friends?.length || 0}</p>
               <p className="text-zinc-400 text-sm">Friends</p>
             </div>
           </div>
 
           {/* FRIENDS */}
-          <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800 mt-6">
+          <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <h2 className="text-xl font-semibold text-indigo-400 mb-4">
               Friends ({user.friends?.length || 0})
             </h2>
@@ -131,17 +137,23 @@ export default function ProfilePage() {
             {user.friends?.length === 0 ? (
               <p className="text-zinc-400">No friends yet.</p>
             ) : (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="
+                grid 
+                grid-cols-2 
+                sm:grid-cols-3 
+                lg:grid-cols-4 
+                gap-4
+              ">
                 {user.friends.map((friend: any) => (
                   <div
                     key={friend._id}
-                    className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg"
+                    className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg text-center"
                   >
                     <Image
                       src={friend.profilePicture}
                       alt={friend.fullname}
-                      width={60}
-                      height={60}
+                      width={70}
+                      height={70}
                       className="rounded-full object-cover"
                     />
 
@@ -157,7 +169,7 @@ export default function ProfilePage() {
           </div>
 
           {/* POSTS */}
-          <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800 mt-6">
+          <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <h2 className="text-xl font-semibold text-indigo-400 mb-4">
               Posts
             </h2>
@@ -165,11 +177,17 @@ export default function ProfilePage() {
             {user.posts?.length === 0 ? (
               <p className="text-zinc-400">No posts yet.</p>
             ) : (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="
+                grid 
+                grid-cols-2 
+                sm:grid-cols-3 
+                lg:grid-cols-4 
+                gap-4
+              ">
                 {user.posts.map((post: any) => (
                   <div
                     key={post._id}
-                    className="relative w-full h-36 bg-zinc-800 rounded-xl overflow-hidden"
+                    className="relative w-full h-36 sm:h-40 bg-zinc-800 rounded-xl overflow-hidden"
                   >
                     <Image
                       src={post.imageUrl}
@@ -182,6 +200,7 @@ export default function ProfilePage() {
               </div>
             )}
           </div>
+
         </div>
       </main>
     </div>
