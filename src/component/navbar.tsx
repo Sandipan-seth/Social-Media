@@ -126,6 +126,7 @@ export default function Nav() {
                         setIsLoggedIn(false);
                         toast.success("Logged out");
                         router.push("/");
+                        window.location.reload();
                       }}
                       className="w-full text-left px-4 py-2 hover:bg-red-600/30 text-red-400 font-medium"
                     >

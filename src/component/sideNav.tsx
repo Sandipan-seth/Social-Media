@@ -18,24 +18,13 @@ export default function SideNav() {
 
   return (
     <div
-      className="
-        hidden md:flex flex-col 
-        w-48                               /* Slim professional width */
-        sticky top-24 
-        h-fit 
-        p-4                                /* reduced padding */
-        rounded-xl 
-        bg-zinc-900/80                     /* lighter subtle background */
-        border border-zinc-800 
-        shadow-sm
-      "
+      className="hidden md:flex flex-col w-48 sticky top-24 h-fit p-4 rounded-xl bg-zinc-900/80 border border-zinc-800 shadow-sm"
     >
       <h3 className="font-semibold text-base mb-3 text-indigo-400">
         Navigation
       </h3>
 
       <ul className="space-y-1.5 text-zinc-300 text-sm">
-
         {/* FEED */}
         <li
           className={`flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition
