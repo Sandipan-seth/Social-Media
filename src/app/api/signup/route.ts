@@ -8,66 +8,111 @@ import { User } from "../../../models/userModel";
 connect();
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  console.log(body);
-  const { username, fullname, email, gender, password } = body;
-  const existedUser = await User.findOne({ email });
-  if (existedUser) {
-    return NextResponse.json({
-      success: false,
-      message: "User with this email already exists",
-    });
-  }
+  try {
+    const body = await req.json();
+    console.log(body);
 
-  const usernameExists = await User.findOne({ username: username.slice(1).split(" ").join("_") });
-  if (usernameExists) {
-    return NextResponse.json({
-      success: false,
-      message: "Username already taken",
-    });
-  }
+    const {
+      username,
+      fullname,
+      email,
+      gender,
+      password,
+      profilePicture, // ← Coming from Cloudinary uploader
+    } = body;
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  const pp = gender === "male"
-    ? "../../../assets/maleDefault.png"
-    : "../../../assets/femaleDefault.png";
-
-  const newUser = new User({
-    username: username.split(" ").join("_"),
-    profilePicture: pp,
-    fullname,
-    email,
-    gender,
-    password: hashedPassword,
-  });
-  await newUser.save();
-
-  const token = jwt.sign(
-    {
-      id: newUser._id,
-      email: newUser.email,
-      username: newUser.username,
-      fullname: newUser.fullname,
-      gender: newUser.gender,
-    },
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: "1d",
+    // --------------------------
+    //  CHECK IF EMAIL ALREADY EXISTS
+    // --------------------------
+    const existedUser = await User.findOne({ email });
+    if (existedUser) {
+      return NextResponse.json({
+        success: false,
+        message: "User with this email already exists",
+      });
     }
-  );
 
-  const res =  NextResponse.json({
-    success: true,
-    user: newUser,
-    message: "User registered successfully",
-    username: newUser.username,
-    token
-  });
+    // --------------------------
+    //  CHECK IF USERNAME EXISTS
+    // --------------------------
+    const formattedUsername = username.split(" ").join("_");
+    const usernameExists = await User.findOne({ username: formattedUsername });
 
-  res.cookies.set("token", token, {
-    httpOnly: true
-  });
+    if (usernameExists) {
+      return NextResponse.json({
+        success: false,
+        message: "Username already taken",
+      });
+    }
 
-  return res;
+    // --------------------------
+    //  HASH PASSWORD
+    // --------------------------
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // --------------------------
+    //  DEFAULT PROFILE PICTURE
+    // --------------------------
+    const defaultPP =
+      gender === "male"
+        ? "https://res.cloudinary.com/demo/image/upload/v1720000000/maleDefault.png"
+        : "https://res.cloudinary.com/demo/image/upload/v1720000000/femaleDefault.png";
+
+    // FINAL PROFILE PICTURE:
+    const finalProfilePicture = profilePicture || defaultPP;
+
+    // --------------------------
+    //  CREATE USER
+    // --------------------------
+    const newUser = await User.create({
+      username: formattedUsername,
+      fullname,
+      email,
+      gender,
+      password: hashedPassword,
+      profilePicture: finalProfilePicture,
+    });
+
+    // --------------------------
+    //  GENERATE JWT TOKEN
+    // --------------------------
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        email: newUser.email,
+        username: newUser.username,
+        fullname: newUser.fullname,
+        gender: newUser.gender,
+      },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    // --------------------------
+    //  SEND RESPONSE WITH COOKIE
+    // --------------------------
+    const res = NextResponse.json({
+      success: true,
+      message: "User registered successfully",
+      username: newUser.username,
+      user: newUser,
+      token,
+    });
+
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      path: "/",
+    });
+
+    return res;
+  } catch (err: any) {
+    console.log("Signup Error:", err);
+    return NextResponse.json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 }

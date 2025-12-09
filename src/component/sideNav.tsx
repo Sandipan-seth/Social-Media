@@ -60,7 +60,7 @@ export default function SideNav() {
                 : "hover:bg-zinc-800/50"
             }
           `}
-          onClick={() => router.push("/edit")}
+          onClick={() => router.push("/profile/edit")}
         >
           <Edit className="w-4 h-4" />
           Edit
