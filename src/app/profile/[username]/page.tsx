@@ -14,21 +14,12 @@ export default function ProfilePage() {
   const params = useParams();
   const username = params.username as string;
 
-  const [token, setToken] = React.useState<string | null>(null);
   const [user, setUser] = React.useState<any>(null);
   const [profileImage, setProfileImage] = React.useState<string>("");
 
-  React.useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (!storedToken) {
-      router.push("/login");
-      return;
-    }
-    setToken(storedToken);
-  }, []);
 
   React.useEffect(() => {
-    if (!token || !username) return;
+    if (!username) return;
 
     const fetchProfile = async () => {
       try {
@@ -51,7 +42,7 @@ export default function ProfilePage() {
     };
 
     fetchProfile();
-  }, [token, username]);
+  }, [username]);
 
   if (!user) {
     return (

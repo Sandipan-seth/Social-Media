@@ -10,7 +10,6 @@ connect();
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    console.log(body);
 
     const {
       username,
@@ -83,6 +82,7 @@ export async function POST(req: NextRequest) {
     res.cookies.set("token", token, {
       httpOnly: true,
       path: "/",
+      maxAge: 24 * 60 * 60,
     });
 
     return res;

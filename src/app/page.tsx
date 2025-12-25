@@ -3,14 +3,14 @@ import Image from "next/image";
 import Post from "../component/post";
 import Nav from "../component/navbar";
 import SideNav from "@/component/sideNav";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { userContext } from "@/context/userContext";
 
 export default function Home() {
 
-  const [token, setToken] = useState("");
-  useEffect(() => {
-    setToken(localStorage.getItem("token") as string);
-  }, [token]);
+  const {isLoggedIn, setIsLoggedIn} = useContext(userContext);
+
+  
 
 
   const posts = [
@@ -40,7 +40,7 @@ export default function Home() {
         <SideNav />
 
         <div className="w-full md:w-3/4 flex flex-col gap-6">
-          {token ? (
+          {isLoggedIn ? (
             <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-700 shadow-md">
               <textarea
                 placeholder="What's on your mind, John?"

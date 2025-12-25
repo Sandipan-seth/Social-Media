@@ -8,14 +8,7 @@ import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const router = useRouter();
-  const [token, setToken] = useState("");
   const [profilePic, setProfilePic] = useState<File | null>(null);
-
-  useEffect(() => {
-    const tok = localStorage.getItem("token") || "";
-    setToken(tok);
-    if (tok) router.push("/");
-  }, []);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -72,9 +65,6 @@ export default function SignupPage() {
     });
 
     if (response.data.success) {
-      localStorage.setItem("username", response.data.username);
-      localStorage.setItem("token", response.data.token);
-
       toast.success("User registered successfully!");
       router.push("/");
     } else {

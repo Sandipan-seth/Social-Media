@@ -2,19 +2,13 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Edit, Home as HomeIcon, Settings, User } from "lucide-react";
-import React from "react";
+import React, { useContext } from "react";
+import { userContext } from "@/context/userContext";
 
 export default function SideNav() {
   const path = usePathname();
   const router = useRouter();
-
-  const [token, setToken] = React.useState("");
-  const [username, setUsername] = React.useState("");
-
-  React.useEffect(() => {
-    setToken(localStorage.getItem("token") || "");
-    setUsername(localStorage.getItem("username") || "");
-  }, []);
+  const { user } = useContext<any>(userContext);
 
   return (
     <div
@@ -55,7 +49,6 @@ export default function SideNav() {
           Edit
         </li>
 
-        {/* PROFILE */}
         <li
           className={`flex items-center gap-2 px-2 py-2 rounded-lg cursor-pointer transition
             ${
@@ -65,7 +58,7 @@ export default function SideNav() {
             }
           `}
           onClick={() =>
-            token ? router.push(`/profile/${username}`) : router.push("/login")
+              router.push(`/profile/${user?.username}`)
           }
         >
           <User className="w-4 h-4" />

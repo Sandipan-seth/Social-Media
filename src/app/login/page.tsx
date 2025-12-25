@@ -2,21 +2,17 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { userContext } from "@/context/userContext";
 
 export default function LoginPage() {
   const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
-  useEffect(() => {
-      setToken(localStorage.getItem("token") || "");
-      if (token) {
-        route.push("/");
-      }
-    }, [token]);
+  const {isLoggedIn, setIsLoggedIn} = useContext<any>(userContext);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +24,8 @@ export default function LoginPage() {
       });
       console.log("Response:", response.data);
       if (response.data.success) {
-        localStorage.setItem("username", response.data.username);
-        localStorage.setItem("token", response.data.token);
         toast.success("Login successful!");
+        setIsLoggedIn(true);
         route.push("/");
       } else {
         toast.error(response.data.message);
