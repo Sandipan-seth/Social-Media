@@ -20,8 +20,8 @@ export async function POST(req: Request) {
     const uploadRes = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: "Social-media",  // 👈 Upload to this folder
-          resource_type: "auto",   // supports images & videos
+          folder: "Social-media",  
+          resource_type: "auto",   
         },
         (error, result) => {
           if (error) reject(error);

@@ -18,12 +18,9 @@ export async function POST(req: NextRequest) {
       email,
       gender,
       password,
-      profilePicture, // ← Coming from Cloudinary uploader
+      profilePicture, 
     } = body;
 
-    // --------------------------
-    //  CHECK IF EMAIL ALREADY EXISTS
-    // --------------------------
     const existedUser = await User.findOne({ email });
     if (existedUser) {
       return NextResponse.json({
@@ -32,9 +29,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // --------------------------
-    //  CHECK IF USERNAME EXISTS
-    // --------------------------
     const formattedUsername = username.split(" ").join("_");
     const usernameExists = await User.findOne({ username: formattedUsername });
 
@@ -45,26 +39,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // --------------------------
-    //  HASH PASSWORD
-    // --------------------------
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // --------------------------
-    //  DEFAULT PROFILE PICTURE
-    // --------------------------
     const defaultPP =
       gender === "male"
         ? "https://res.cloudinary.com/demo/image/upload/v1720000000/maleDefault.png"
         : "https://res.cloudinary.com/demo/image/upload/v1720000000/femaleDefault.png";
 
-    // FINAL PROFILE PICTURE:
     const finalProfilePicture = profilePicture || defaultPP;
 
-    // --------------------------
-    //  CREATE USER
-    // --------------------------
     const newUser = await User.create({
       username: formattedUsername,
       fullname,
@@ -74,9 +58,6 @@ export async function POST(req: NextRequest) {
       profilePicture: finalProfilePicture,
     });
 
-    // --------------------------
-    //  GENERATE JWT TOKEN
-    // --------------------------
     const token = jwt.sign(
       {
         id: newUser._id,
@@ -91,9 +72,6 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    // --------------------------
-    //  SEND RESPONSE WITH COOKIE
-    // --------------------------
     const res = NextResponse.json({
       success: true,
       message: "User registered successfully",

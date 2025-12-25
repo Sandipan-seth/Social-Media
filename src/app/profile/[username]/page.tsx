@@ -16,6 +16,7 @@ export default function ProfilePage() {
 
   const [token, setToken] = React.useState<string | null>(null);
   const [user, setUser] = React.useState<any>(null);
+  const [profileImage, setProfileImage] = React.useState<string>("");
 
   React.useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -37,6 +38,8 @@ export default function ProfilePage() {
 
         if (response.data.success) {
           setUser(response.data.user);
+          console.log("Fetched user profile:", response.data.user);
+          setProfileImage(response.data.user.profilePicture);
         } else {
           router.push("/404");
           toast.error("User not found");
@@ -62,22 +65,18 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-black text-white">
       <main className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
 
-        {/* SIDE NAV */}
         <div className="w-full md:w-1/4">
           <SideNav />
         </div>
 
-        {/* MAIN CONTENT */}
         <div className="w-full md:w-3/4 flex flex-col gap-6">
 
-          {/* PROFILE HEADER */}
           <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
 
-              {/* PROFILE IMAGE */}
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-zinc-700 flex-shrink-0">
                 <Image 
-                  src={maleDp}
+                  src={profileImage || maleDp}
                   alt="Profile"
                   fill
                   className="object-cover"

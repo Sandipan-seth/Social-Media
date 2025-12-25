@@ -4,24 +4,48 @@ import React, { useEffect, useState } from "react";
 import { Search, Bell, User, Home as HomeIcon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { userContext } from "@/context/userContext";
 
 export default function Nav() {
-  const [search, setSearch] = useState("");
-  const [token, setToken] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [search, setSearch] = useState<any>("");
+  const [token, setToken] = useState<String>("");
   const path = usePathname();
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState<String>("");
+  const { user, setUser, isLoggedIn, setIsLoggedIn, profilePic, setProfilePic } = React.useContext<any>(userContext);
+
 
   React.useEffect(() => {
     setUsername(localStorage.getItem("username") || "");
   }, [token]);
 
   useEffect(() => {
-    const t = localStorage.getItem("token") || "";
-    setToken(t);
-    setIsLoggedIn(!!t);
-  }, []);
+    const token = localStorage.getItem("token") || "";
+    setToken(token);
+    setIsLoggedIn(!!token);
+
+    if (token) {
+      try {
+        const fetchUserData = async () => {
+          try {
+            const response = await axios.post(`api/user/getUser`, {token});
+            setUser(response.data.data);
+            setProfilePic(response.data.data.profilePicture || "");
+
+          } catch (err) {
+            console.error("Error in fetchUserData:", err);
+          }
+        };
+        fetchUserData();
+      } catch (err: any) {
+        console.error("Error fetching user data:", err);
+        toast.error("Failed to fetch user data");
+      }
+    }
+  }, [setUser, setIsLoggedIn]);
+
+
 
   const searchFunction = (e: any) => {
     if (e.key === "Enter" && search.trim()) {
@@ -32,8 +56,6 @@ export default function Nav() {
     }
   };
 
-  const defaultAvatar =
-    "https://www.shareicon.net/data/512x512/2016/05/24/770117_people_512x512.png";
 
   return (
     <div className="sticky top-0 w-full z-50 flex flex-col bg-zinc-900/95 backdrop-blur-lg shadow-md">
@@ -77,7 +99,7 @@ export default function Nav() {
                 <div className="relative group cursor-pointer select-none">
                   {/* Avatar */}
                   <img
-                    src={defaultAvatar}
+                    src={profilePic ? profilePic : ""}
                     alt="User Avatar"
                     className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500 hover:opacity-90 transition"
                   />
@@ -85,7 +107,6 @@ export default function Nav() {
                   {/* Online indicator */}
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900"></span>
 
-                  {/* Dropdown */}
                   <div
                     className="
                       absolute right-0 mt-3 w-44 bg-zinc-900 border border-zinc-800 rounded-xl 
@@ -96,7 +117,6 @@ export default function Nav() {
                       z-50
                     "
                   >
-                    {/* Mobile-only buttons */}
                     <button
                       onClick={() => {
                         router.push("/");
