@@ -1,9 +1,9 @@
 "use client";
 
 import { useContext, useEffect, useRef, useState } from "react";
-import SideNav from "@/component/SideNav";
-import Post from "@/component/Post";
-import PostUpload from "@/component/PostUpload";
+import SideNav from "@/components/SideNav";
+import Post from "@/components/Post";
+import PostUpload from "@/components/PostUpload";
 import { userContext } from "@/context/userContext";
 
 export default function Home() {
