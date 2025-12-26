@@ -32,11 +32,11 @@ export default function Post({
       </p>
 
       {image && (
-        <div className="relative w-full h-72 rounded-xl overflow-hidden shadow-md">
+        <div className="relative w-auto rounded-xl overflow-hidden shadow-md">
           <img
             src={image}
             alt="post image"
-            className="object-cover w-full h-full"
+            className="object-cover md:object-scale-down aspect-[7/7] md:aspect-[16/9] w-full h-full"
           />
         </div>
       )}

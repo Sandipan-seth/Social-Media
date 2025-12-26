@@ -19,7 +19,7 @@ export default function Home() {
     if (loading) return;
     setLoading(true);
 
-    const res = await fetch(`/api/posts?cursor=${cursor || ""}`);
+    const res = await fetch(`/api/posts/fetchPostsAll?cursor=${cursor || ""}`);
     const data = await res.json();
 
     if (data.success) {

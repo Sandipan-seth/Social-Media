@@ -44,7 +44,7 @@ export default function CreatePost() {
       }
 
       try {
-        const res = await axios.post("/api/post", {
+        const res = await axios.post("/api/posts/createPost", {
           content,
           author: user._id,
           picture: postUrl,
