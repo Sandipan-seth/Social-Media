@@ -1,8 +1,8 @@
 "use client";
 
 import { useContext, useEffect, useRef, useState } from "react";
-import SideNav from "@/component/sideNav";
-import Post from "../component/post";
+import SideNav from "@/component/SideNav";
+import Post from "../component/Post";
 import PostUpload from "@/component/PostUpload";
 import { userContext } from "@/context/userContext";
 

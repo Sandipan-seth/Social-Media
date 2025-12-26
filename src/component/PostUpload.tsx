@@ -109,7 +109,7 @@ export default function CreatePost() {
         className="hidden"
       />
 
-      <div className="flex items-center justify-between pt-4 gap-3">
+      <div className="flex items-center flex-col md:flex-row justify-between pt-4 gap-3">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
@@ -120,7 +120,7 @@ export default function CreatePost() {
           Add Image / Video
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           <select
             value={privacy}
             onChange={(e) => setPrivacy(e.target.value as "public" | "friends")}
@@ -135,7 +135,7 @@ export default function CreatePost() {
           <button
             type="submit"
             disabled={!content.trim()}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition w-2/3 md:w-auto 
               ${
                 content.trim()
                   ? "bg-indigo-600 hover:bg-indigo-700 text-white"

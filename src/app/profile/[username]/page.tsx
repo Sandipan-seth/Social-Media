@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import SideNav from "@/component/sideNav";
+import SideNav from "@/component/SideNav";
 import Image from "next/image";
 import axios from "axios";
 import { Mail, User, PencilLine } from "lucide-react";

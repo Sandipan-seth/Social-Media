@@ -104,7 +104,7 @@ export default function Nav() {
 
                 <div
                   className="
-                    absolute right-0 mt-3 w-44 bg-zinc-900 border border-zinc-800 rounded-xl 
+                    absolute right-0 mt-3 w-24 md:w-44 bg-zinc-900 border border-zinc-800 rounded-xl 
                     shadow-xl opacity-0 scale-95 
                     group-hover:opacity-100 group-hover:scale-100 
                     transition-all duration-200
