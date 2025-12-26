@@ -1,43 +1,58 @@
 "use client";
-import Image from "next/image";
-import Post from "../component/post";
-import Nav from "../component/navbar";
+
+import { useContext, useEffect, useRef, useState } from "react";
 import SideNav from "@/component/sideNav";
-import { useContext, useEffect, useState } from "react";
-import { userContext } from "@/context/userContext";
+import Post from "../component/post";
 import PostUpload from "@/component/PostUpload";
+import { userContext } from "@/context/userContext";
 
 export default function Home() {
+  const { isLoggedIn } = useContext(userContext);
 
-  const {isLoggedIn, setIsLoggedIn} = useContext(userContext);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  
+  const observerRef = useRef<HTMLDivElement>(null);
 
+  const loadPosts = async () => {
+    if (loading) return;
+    setLoading(true);
 
-  const posts = [
-    {
-      user: { name: "John Doe", avatar: "/defaultDp.png" },
-      time: "2h ago",
-      content: "Just started building my new Next.js social media app! 🚀🔥 This dark theme setup with Tailwind CSS is looking sharp and modern.",
-      image: "/defaultPost.jpg",
-    },
-    {
-      user: { name: "Sara Smith", avatar: "/defaultDp.png" },
-      time: "5h ago",
-      content: "Dark theme is love. Working late night hits different ✨ Finding the perfect balance between 'too bright' and 'too dull' is key for a great user experience.",
-    },
-    {
-      user: { name: "DevHub", avatar: "/defaultDp.png" },
-      time: "1 day ago",
-      content: "Here's a clean UI for feed pages using Tailwind + Next.js! Check out the subtle hover effects and component reuse for maximum performance.",
-      image: "/defaultPost.jpg",
-    },
-  ];
-  
-  
+    const res = await fetch(`/api/posts?cursor=${cursor || ""}`);
+    const data = await res.json();
+
+    if (data.success) {
+      setPosts((prev) => [...prev, ...data.posts]);
+      setCursor(data.nextCursor);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
+  useEffect(() => {
+    if (!observerRef.current || !cursor) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          loadPosts();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [cursor]);
+
   return (
     <div className="min-h-screen bg-black text-white">
-      <main className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
+      <main className="w-full max-w-4xl mx-auto py-8 px-4 flex gap-8">
         <SideNav />
 
         <div className="w-full md:w-3/4 flex flex-col gap-6">
@@ -47,17 +62,24 @@ export default function Home() {
             </div>
           ) : (
             <div className="bg-indigo-600 text-white p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+              
               <div>
-                <h2 className="text-lg font-bold">Welcome to SocialFeed!</h2>
+                
+                <h2 className="text-lg font-bold">
+                  Welcome to SocialFeed!
+                </h2>
                 <p className="text-sm">
+                  
                   Join our community and start sharing your moments.
                 </p>
               </div>
               <div className="flex gap-4">
+                
                 <button
                   onClick={() => (window.location.href = "/login")}
                   className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50 transition"
                 >
+                  
                   Log In
                 </button>
                 <button
@@ -70,15 +92,22 @@ export default function Home() {
             </div>
           )}
 
-          {posts.map((post, index) => (
+          {posts.map((post) => (
             <Post
-              key={index}
-              user={post.user}
-              time={post.time}
+              key={post._id}
+              user={{
+                name: post.author.username,
+                avatar: post.author.profilePicture || "/defaultDp.png",
+              }}
+              time={post.createdAt}
               content={post.content}
-              image={post.image}
+              image={post.picture}
             />
           ))}
+
+          <div ref={observerRef} className="h-10" />
+
+          {loading && <p className="text-center text-zinc-400">Loading...</p>}
         </div>
       </main>
     </div>
