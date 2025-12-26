@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from "react";
 import SideNav from "@/component/SideNav";
-import Post from "../component/Post";
+import Post from "@/component/Post";
 import PostUpload from "@/component/PostUpload";
 import { userContext } from "@/context/userContext";
 
@@ -79,7 +79,6 @@ export default function Home() {
                   onClick={() => (window.location.href = "/login")}
                   className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50 transition"
                 >
-                  
                   Log In
                 </button>
                 <button

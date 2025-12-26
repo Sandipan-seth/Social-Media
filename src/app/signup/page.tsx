@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 export default function SignupPage() {
   const router = useRouter();
   const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -28,54 +29,56 @@ export default function SignupPage() {
   };
 
   async function handleSubmit(e: any) {
-  e.preventDefault();
+    setLoading(true);
+    e.preventDefault();
 
-  const usernameFormatted = formData.username.split(" ").join("_");
+    const usernameFormatted = formData.username.split(" ").join("_");
 
-  const validate = await axios.post("/api/signup/check", {
-    username: usernameFormatted,
-    email: formData.email,
-  });
-
-  if (!validate.data.success) {
-    toast.error(validate.data.message);
-    return;
-  }
-
-  let imageUrl = "";
-
-  if (profilePic) {
-    const form = new FormData();
-    form.append("file", profilePic);
-
-    try {
-      const uploadRes = await axios.post("/api/upload", form);
-      imageUrl = uploadRes.data.secure_url;
-    } catch (error) {
-      toast.error("Failed to upload profile picture");
-      return;
-    }
-  }
-
-  try {
-    const response = await axios.post("/api/signup", {
-      ...formData,
+    const validate = await axios.post("/api/signup/check", {
       username: usernameFormatted,
-      profilePicture: imageUrl,
+      email: formData.email,
     });
 
-    if (response.data.success) {
-      toast.success("User registered successfully!");
-      router.push("/");
-    } else {
-      toast.error(response.data.message);
+    if (!validate.data.success) {
+      toast.error(validate.data.message);
+      return;
     }
-  } catch (err) {
-    console.log(err);
-    toast.error("Signup failed");
-  }
-}
 
+    let imageUrl = "";
+
+    if (profilePic) {
+      const form = new FormData();
+      form.append("file", profilePic);
+
+      try {
+        const uploadRes = await axios.post("/api/upload", form);
+        imageUrl = uploadRes.data.secure_url;
+      } catch (error) {
+        toast.error("Failed to upload profile picture");
+        return;
+      }
+    }
+
+    try {
+      const response = await axios.post("/api/signup", {
+        ...formData,
+        username: usernameFormatted,
+        profilePicture: imageUrl,
+      });
+
+      if (response.data.success) {
+        toast.success("User registered successfully!");
+        router.push("/");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Signup failed");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -83,8 +86,6 @@ export default function SignupPage() {
         <h1 className="text-3xl font-bold mb-6 text-center">Sign Up</h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-
-          {/* Profile Picture */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Profile Picture
@@ -99,7 +100,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="username" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium mb-1"
+            >
               Username
             </label>
             <input
@@ -113,7 +117,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="fullname" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="fullname"
+              className="block text-sm font-medium mb-1"
+            >
               Full Name
             </label>
             <input
@@ -160,7 +167,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
               Password
             </label>
             <input
@@ -175,9 +185,14 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-semibold"
+            className={
+              `w-full py-2 px-4  text-white rounded-md font-semibold hover:bg-indigo-700 transition ${
+                loading ? "opacity-50 cursor-not-allowed bg-indigo-700" : "bg-indigo-600"
+              }`
+            }
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </button>
 
           <p className="text-center">

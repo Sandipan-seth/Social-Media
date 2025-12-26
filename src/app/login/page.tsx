@@ -11,11 +11,12 @@ export default function LoginPage() {
   const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {isLoggedIn, setIsLoggedIn} = useContext<any>(userContext);
-
+  const { isLoggedIn, setIsLoggedIn } = useContext<any>(userContext);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post("/api/login", {
@@ -35,6 +36,7 @@ export default function LoginPage() {
     } finally {
       setEmail("");
       setPassword("");
+      setLoading(false);
     }
   };
 
@@ -76,9 +78,12 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 rounded-md text-white font-semibold transition duration-300"
+            className={`w-full py-2 px-4  text-white rounded-md font-semibold hover:bg-indigo-700 transition duration-300 ${
+              loading ? "opacity-50 cursor-not-allowed bg-indigo-700" : "bg-indigo-600"
+            }`}
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging In..." : "Login"}
           </button>
           <h1>
             Don't have an account?{" "}
