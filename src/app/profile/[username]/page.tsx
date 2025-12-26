@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import SideNav from "@/components/SideNav";
 import Image from "next/image";
 import axios from "axios";
-import { Mail, User, PencilLine } from "lucide-react";
+import { Mail, User, BadgeCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import maleDp from "@/assets/maleDefault.png";
@@ -16,7 +16,6 @@ export default function ProfilePage() {
 
   const [user, setUser] = React.useState<any>(null);
   const [profileImage, setProfileImage] = React.useState<string>("");
-
 
   React.useEffect(() => {
     if (!username) return;
@@ -55,18 +54,15 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <main className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
-
         <div className="w-full md:w-1/4">
           <SideNav />
         </div>
 
         <div className="w-full md:w-3/4 flex flex-col gap-6">
-
           <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-zinc-700 flex-shrink-0">
-                <Image 
+                <Image
                   src={profileImage || maleDp}
                   alt="Profile"
                   fill
@@ -78,9 +74,11 @@ export default function ProfilePage() {
               <div className="text-center sm:text-left w-full">
                 <h1 className="text-2xl font-bold flex items-center justify-center sm:justify-start gap-2">
                   {user.fullname}
-                  <button className="p-2 rounded-lg hover:bg-zinc-800 transition">
-                    <PencilLine className="w-5 h-5 text-zinc-400" />
-                  </button>
+                  {user.isVerified && (
+                    <button className="p-2 rounded-lg hover:bg-zinc-800 transition">
+                      <BadgeCheck className="w-5 h-5 text-blue-700" />
+                    </button>
+                  )}
                 </h1>
 
                 <p className="text-zinc-400">@{user.username}</p>
@@ -126,14 +124,16 @@ export default function ProfilePage() {
             {user.friends?.length === 0 ? (
               <p className="text-zinc-400">No friends yet.</p>
             ) : (
-              <div className="
+              <div
+                className="
                 grid 
                 grid-cols-2 
                 sm:grid-cols-3 
                 lg:grid-cols-4 
                 gap-4
-              ">
-                {user.friends.map((friend: any) => (
+              "
+              >
+                {user.friends?.map((friend: any) => (
                   <div
                     key={friend._id}
                     className="flex flex-col items-center bg-zinc-800 p-4 rounded-lg text-center"
@@ -157,7 +157,6 @@ export default function ProfilePage() {
             )}
           </div>
 
-          {/* POSTS */}
           <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <h2 className="text-xl font-semibold text-indigo-400 mb-4">
               Posts
@@ -166,30 +165,35 @@ export default function ProfilePage() {
             {user.posts?.length === 0 ? (
               <p className="text-zinc-400">No posts yet.</p>
             ) : (
-              <div className="
+              <div
+                className="
                 grid 
                 grid-cols-2 
                 sm:grid-cols-3 
                 lg:grid-cols-4 
                 gap-4
-              ">
-                {user.posts.map((post: any) => (
+              "
+              >
+                {user.posts.reverse().map((post: any) => (
                   <div
                     key={post._id}
-                    className="relative w-full h-36 sm:h-40 bg-zinc-800 rounded-xl overflow-hidden"
+                    className="relative w-full h-36 sm:h-40 bg-zinc-800 rounded-xl overflow-hidden flex items-center justify-center text-center p-2"
                   >
-                    <Image
-                      src={post.imageUrl}
-                      alt="Post"
-                      fill
-                      className="object-cover"
-                    />
+                    {post.picture ? (
+                      <Image
+                        src={post.picture}
+                        alt="Post Image"
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      post.content
+                    )}
                   </div>
                 ))}
               </div>
             )}
           </div>
-
         </div>
       </main>
     </div>

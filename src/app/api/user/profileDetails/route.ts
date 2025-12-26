@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   try {
     let user = await User.findOne({
       username: username,
-    });
+    }).populate("friends").populate("posts");
 
     if (!user) {
       return NextResponse.json({

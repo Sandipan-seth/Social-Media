@@ -76,7 +76,7 @@ export default function CreatePost() {
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder={`What's on your mind , ${user.username}?`}
+        placeholder={`What's on your mind , ${user?.username}?`}
         rows={2}
         className="w-full bg-transparent text-white placeholder-zinc-400
                    resize-none focus:outline-none border-b border-zinc-800 pb-3

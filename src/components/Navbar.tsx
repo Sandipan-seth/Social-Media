@@ -30,7 +30,7 @@ export default function Nav() {
         if (res.data.loggedIn) {
           setIsLoggedIn(true);
           setUser(res.data.user);
-          setProfilePic(res.data.user.profilePicture || "");
+          setProfilePic(res.data.user.profilePicture);
         } else {
           setIsLoggedIn(false);
           setUser(null);
@@ -62,18 +62,14 @@ export default function Nav() {
 
   return (
     <div className="sticky top-0 w-full z-50 flex flex-col bg-zinc-900/95 backdrop-blur-lg shadow-md">
-
       <nav className="w-full border-b border-zinc-800 p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => router.push("/")}
           >
             <HomeIcon className="w-6 h-6 text-indigo-500" />
-            <h1 className="text-xl font-extrabold text-white">
-              SocialFeed
-            </h1>
+            <h1 className="text-xl font-extrabold text-white">SocialFeed</h1>
           </div>
 
           <div className="hidden md:flex relative items-center w-1/2 max-w-sm">
@@ -89,18 +85,19 @@ export default function Nav() {
           </div>
 
           <div className="flex items-center gap-4">
-
             <button className="p-2 rounded-full hover:bg-zinc-800 transition">
               <Bell className="w-6 h-6 text-zinc-400" />
             </button>
 
             {isLoggedIn ? (
               <div className="relative group cursor-pointer">
-                <img
-                  src={profilePic}
-                  alt="Avatar"
-                  className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
-                />
+                {profilePic && (
+                  <img
+                    src={profilePic}
+                    alt="Avatar"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-indigo-500"
+                  />
+                )}
 
                 <div
                   className="

@@ -5,6 +5,7 @@ import SideNav from "@/components/SideNav";
 import Post from "@/components/Post";
 import PostUpload from "@/components/PostUpload";
 import { userContext } from "@/context/userContext";
+import axios from "axios";
 
 export default function Home() {
   const { isLoggedIn } = useContext(userContext);
@@ -19,8 +20,10 @@ export default function Home() {
     if (loading) return;
     setLoading(true);
 
-    const res = await fetch(`/api/posts/fetchPostsAll?cursor=${cursor || ""}`);
-    const data = await res.json();
+    const res = await axios.get(`/api/posts/fetchPostsAll?cursor=${cursor || ""}`);
+    const data = res.data;
+    // console.log(data);
+
 
     if (data.success) {
       setPosts((prev) => [...prev, ...data.posts]);
@@ -97,6 +100,7 @@ export default function Home() {
               user={{
                 name: post.author.username,
                 avatar: post.author.profilePicture || "/defaultDp.png",
+                isVerified: post.author.isVerified,
               }}
               time={post.createdAt}
               content={post.content}

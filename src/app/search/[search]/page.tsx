@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, BadgeCheck } from "lucide-react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -84,7 +84,6 @@ export default function SearchPage() {
                 <div className="bg-zinc-900 p-4 rounded-xl shadow-2xl flex items-start space-x-4 border border-zinc-800 transition duration-300 ease-in-out hover:bg-zinc-850 hover:border-indigo-600/50 ">
                   <Image
                     src={
-                      // item.profilePicture as string
                       item.profilePicture ||
                       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
                     }
@@ -100,18 +99,7 @@ export default function SearchPage() {
                         {item.fullname}
                       </h2>
                       {item.isVerified && (
-                        <span
-                          className="text-indigo-400 bg-indigo-900/50 p-0.5 rounded-full"
-                          title="Verified Account"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 fill-current"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                          </svg>
-                        </span>
+                        <BadgeCheck className="w-4 h-4 text-blue-700" />
                       )}
                     </div>
 

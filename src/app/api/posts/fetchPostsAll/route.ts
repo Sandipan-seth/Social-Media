@@ -44,6 +44,8 @@ export async function GET(req: NextRequest) {
           isOnlyFriends: 1,
           "author.username": 1,
           "author.profilePicture": 1,
+          "author.isVerified": 1,
+
           likeCount: { $size: "$likes" },
           commentCount: { $size: "$comments" },
         },
