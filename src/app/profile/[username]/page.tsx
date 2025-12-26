@@ -61,7 +61,7 @@ export default function ProfilePage() {
         <div className="w-full md:w-3/4 flex flex-col gap-6">
           <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-zinc-700 flex-shrink-0">
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border border-zinc-700 shrink-0">
                 <Image
                   src={profileImage || maleDp}
                   alt="Profile"

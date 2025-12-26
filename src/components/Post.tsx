@@ -42,7 +42,7 @@ export default function Post({
           <img
             src={image}
             alt="post image"
-            className="object-cover md:object-scale-down aspect-[7/7] md:aspect-[16/9] w-full h-full"
+            className="object-cover md:object-scale-down aspect-7/7 md:aspect-video w-full h-full"
           />
         </div>
       )}
