@@ -5,6 +5,7 @@ import Nav from "../component/navbar";
 import SideNav from "@/component/sideNav";
 import { useContext, useEffect, useState } from "react";
 import { userContext } from "@/context/userContext";
+import PostUpload from "@/component/PostUpload";
 
 export default function Home() {
 
@@ -42,19 +43,7 @@ export default function Home() {
         <div className="w-full md:w-3/4 flex flex-col gap-6">
           {isLoggedIn ? (
             <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-700 shadow-md">
-              <textarea
-                placeholder="What's on your mind, John?"
-                className="w-full bg-transparent text-white p-2 border-b border-zinc-700 focus:outline-none resize-none"
-                rows={2}
-              />
-              <div className="flex justify-between items-center pt-3">
-                <span className="text-sm text-indigo-400 cursor-pointer hover:text-indigo-300">
-                  Add Image/Video
-                </span>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition duration-150">
-                  Post
-                </button>
-              </div>
+              <PostUpload />
             </div>
           ) : (
             <div className="bg-indigo-600 text-white p-4 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">

@@ -81,17 +81,17 @@ export default function SearchPage() {
                 href={`/profile/${item.username}`}
                 className="block group rounded-xl transition duration-300 outline-none focus:ring-4 focus:ring-indigo-500/50"
               >
-                <div className="bg-zinc-900 p-4 rounded-xl shadow-2xl flex items-start space-x-4 border border-zinc-800 transition duration-300 ease-in-out hover:bg-zinc-850 hover:border-indigo-600/50">
+                <div className="bg-zinc-900 p-4 rounded-xl shadow-2xl flex items-start space-x-4 border border-zinc-800 transition duration-300 ease-in-out hover:bg-zinc-850 hover:border-indigo-600/50 ">
                   <Image
                     src={
                       // item.profilePicture as string
-                      item.image ||
+                      item.profilePicture ||
                       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
                     }
                     alt={item.fullname}
                     width={72}
                     height={72}
-                    className="rounded-full object-cover border-4 border-zinc-700 group-hover:border-indigo-500 transition shadow-lg flex-shrink-0"
+                    className="rounded-full aspect-square object-cover border-4 border-zinc-700 group-hover:border-indigo-500 transition shadow-lg shrink-0"
                   />
 
                   <div className="flex-1 min-w-0">
